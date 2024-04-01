@@ -2,22 +2,56 @@
 import Image from "next/image";
 import TableComponent from "./tableComponent";
 import Button from "@mui/material/Button";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
-function createData(name, calories, fat, carbs, protein) {
-  return { name, calories, fat, carbs, protein };
-}
-const rowsDefault = [
-  createData("Frozen yoghurt", 159, 6.0, 24, 4.0),
-  createData("Ice cream sandwich", 237, 9.0, 37, 4.3),
-  createData("Eclair", 262, 16.0, 24, 6.0),
-  createData("Cupcake", 305, 3.7, 67, 4.3),
-  createData("Gingerbread", 356, 16.0, 49, 3.9),
+const defaultData = [
+  {
+    name: "Frozen yoghurt",
+    calories: 159,
+    fat: 6,
+    carbs: 24,
+    protein: 4,
+  },
+  {
+    name: "Ice cream sandwich",
+    calories: 237,
+    fat: 9,
+    carbs: 37,
+    protein: 4.3,
+  },
+  {
+    name: "Eclair",
+    calories: 262,
+    fat: 16,
+    carbs: 24,
+    protein: 6,
+  },
+  {
+    name: "Cupcake",
+    calories: 305,
+    fat: 3.7,
+    carbs: 67,
+    protein: 4.3,
+  },
+  {
+    name: "Gingerbread",
+    calories: 356,
+    fat: 16,
+    carbs: 49,
+    protein: 3.9,
+  },
 ];
 export default function Home() {
   const router = useRouter();
-  const [rows, setRows] = useState(rowsDefault);
+  const [rows, setRows] = useState(defaultData);
+  useEffect(() => {
+    if (JSON.parse(sessionStorage.getItem("nutr-data"))?.length > 0) {
+      setRows(JSON.parse(sessionStorage.getItem("nutr-data")));
+      return;
+    }
+    sessionStorage.setItem("nutr-data", JSON.stringify(defaultData));
+  }, []);
   return (
     <main>
       <div
@@ -28,6 +62,14 @@ export default function Home() {
           justifyContent: "center",
         }}
       >
+        <div
+          style={{
+            width: "50%",
+            margin: "0 auto",
+            marginTop: "40px",
+            marginBottom: "40px",
+          }}
+        ></div>
         <div
           style={{
             width: "80%",
