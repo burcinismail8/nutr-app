@@ -4,7 +4,7 @@ import TableComponent from "./tableComponent";
 import Button from "@mui/material/Button";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-
+import TextField from "@mui/material/TextField";
 const defaultData = [
   {
     name: "Frozen yoghurt",
@@ -52,6 +52,27 @@ export default function Home() {
     }
     sessionStorage.setItem("nutr-data", JSON.stringify(defaultData));
   }, []);
+  const handleSearch = (e) => {
+    if (e.target.value.length == 0) {
+      setRows(JSON.parse(sessionStorage.getItem("nutr-data")) || defaultData);
+      return;
+    }
+    if (JSON.parse(sessionStorage.getItem("nutr-data").length > 0)) {
+      let filteredData = JSON.parse(sessionStorage.getItem("nutr-data")).slice(
+        0
+      );
+      filteredData = filteredData.filter((food) =>
+        food.name.toLowerCase().includes(e.target.value.toLowerCase())
+      );
+      setRows(filteredData);
+    } else {
+      let filteredData = defaultData.slice(0);
+      filteredData = filteredData.filter((food) =>
+        food.name.toLowerCase().includes(e.target.value.toLowerCase())
+      );
+      setRows(filteredData);
+    }
+  };
   return (
     <main>
       <div
@@ -64,12 +85,18 @@ export default function Home() {
       >
         <div
           style={{
-            width: "50%",
             margin: "0 auto",
             marginTop: "40px",
             marginBottom: "40px",
           }}
-        ></div>
+        >
+          <TextField
+            label="Search Food"
+            variant="standard"
+            onChange={handleSearch}
+            sx={{ width: "350px" }}
+          />
+        </div>
         <div
           style={{
             width: "80%",
